@@ -80,7 +80,7 @@ app.delete('/api/products/:id', async (req, res) => {
     }
 });
 
-mongoose.connect("mongodb+srv://shivamatjp:FMG59aAfy0Poo8hf@crudapi.iuwyqrx.mongodb.net/Node-api?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://................. your mongodb connection sring with password")
 .then(() => {
     console.log('Database connected');
     app.listen(3000, () => {
