@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Product Form</h2>
+
+<form action="http://localhost:3000/api/products" method="post">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <label for="quantity">Quantity:</label><br>
+    <input type="number" id="quantity" name="quantity"><br>
+    <label for="price">Price:</label><br>
+    <input type="number" id="price" name="price" step="0.01"><br>
+    <label for="image">Image:</label><br>
+    <input type="file" id="image" name="image"><br>
+    <input type="submit" value="Submit">
+</form> 
+
+<button id="updateButton">Update</button>
+<button id="deleteButton">Delete</button>
+
+<script>
+    let productId; 
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const response = await fetch('http://localhost:3000/api/products', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        console.log(data);
+
+        productId = data.product._id; // Set productId to the ID of the created product
+    });
+
+    form.addEventListener('submit', function() {
+        alert('Form submitted');
+        form.reset();
+    });
+
+    const updateButton = document.getElementById('updateButton');
+    const deleteButton = document.getElementById('deleteButton');
+
+    updateButton.addEventListener('click', function() {
+        if (!productId) {
+            return alert('No product to update');
+        }
+
+        fetch(`http://localhost:3000/api/products/${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: 'New Name',
+                quantity: 10,
+                price: 5.99,
+                // Add other fields as needed
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+
+    deleteButton.addEventListener('click', function() {
+        if (!productId) {
+            return alert('No product to delete');
+        }
+
+        fetch(`http://localhost:3000/api/products/${productId}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+<button onclick="window.location.href='http://localhost:3000/see.html'">See Products</button>
+
+</body>
+</html>
